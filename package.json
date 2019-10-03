@@ -4,17 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "tsc --watch",
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "lint": "tslint --project . --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "config": "^3.2.2",
+    "cron": "^1.7.2",
     "node-telegram-bot-api": "^0.30.0"
   },
   "devDependencies": {
     "@types/config": "0.0.34",
-    "@types/node-telegram-bot-api": "^0.31.0"
+    "@types/cron": "^1.7.1",
+    "@types/node-telegram-bot-api": "^0.31.0",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   }
 }

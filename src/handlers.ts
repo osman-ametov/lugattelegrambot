@@ -1,58 +1,39 @@
-import { Message, InlineQuery } from 'node-telegram-bot-api';
-import { MessageType } from './types';
-import TelegramBot = require('node-telegram-bot-api');
 import config from 'config';
-import { findTranslation } from './services';
-
-const getMessageType = (msg: Message): MessageType => {
-  return MessageType.Word;
-}
+import { InlineQuery, Message } from 'node-telegram-bot-api';
+import TelegramBot = require('node-telegram-bot-api');
+import { findTranslation, getMessageType } from './services';
+import { MessageType } from './types';
 
 export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery) => {
 
-  if (!msg.query) {
+  if (msg.query === undefined) {
     return;
   }
 
-  const processedMessage = await findTranslation(msg);
+  const translation = await findTranslation(msg.query);
+  const reply: TelegramBot.InlineQueryResultArticle[] = [
+    {
+      "type" : "article",
+      "id" : "0",
+      "title": translation.modified,
+      "input_message_content" : {
+        message_text: translation.modified
+      }
+    }
+  ];	
 
-	// processMessage(msg, function(err, chatId, response, modified, translation){
-	// 	if (err instanceof Error)
-	// 		response = 'Что-то пошло не так. Попробуйте чуть позже';
-
-	// 	if (err != null)
-	// 		response = err;
-	// 	else
-	// 		translation = null;
-
-	// 	db.insertUserQuery(text, modified || text, err !== null, translation, function(){});
-
-	// 	if (null != translation) {
-	// 		var resp = [
-	// 			{
-	// 				'type' : 'article',
-	// 				'id' : '0',
-	// 				'title': text,
-	// 				'input_message_content' : {
-	// 					message_text: response
-	// 				}
-	// 			}
-	// 		];		
-
-	// 		bot.answerInlineQuery(chatId, resp);
-	// 	}
-	// });
+  bot.answerInlineQuery(msg.id, reply);
 };
 
 export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
+  if (msg.text === undefined) {
+    return;
+  }
+
+  let reply: string;
+
   try {
-    let reply: string;
-
-    if (msg.text === undefined) {
-      return;
-    }
-
-    const messageType = getMessageType(msg);
+    const messageType = getMessageType(msg);    
     switch (messageType) {
       case MessageType.Start:
         bot.sendSticker(msg.chat.id, config.get<string>('telegram.sticker.hello'));
@@ -75,6 +56,11 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
     }
 
   } catch (err) {
-
+    reply = config.get<string>('message.internalError');
+    bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
   }
 };
+
+export const errorHandler = () => {
+  process.exit(1);
+}
