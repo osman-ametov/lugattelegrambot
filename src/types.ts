@@ -1,16 +1,16 @@
-export interface IProcessedMessage {
-  response: string;
-  modified: string;
-  translation: Translation;
+export interface ITranslation {
+  word: string;
+  translation: string;
 }
 
-export interface ITranslationResult {
-  response: string;
-  modified: string;
-  translation: Translation;
+export interface IUserQuery {
+  query: string;
+  word: string;
+  found: boolean;
+  translation: TranslationType;
 }
 
-export enum Translation {
+export enum TranslationType {
   RuChr = 'ru_chr',
   ChrRu = 'chr_ru'
 }

@@ -3,6 +3,8 @@ import { InlineQuery, Message } from 'node-telegram-bot-api';
 import TelegramBot = require('node-telegram-bot-api');
 import { findTranslation, getMessageType } from './services';
 import { MessageType } from './types';
+import { logger } from './utils/logger';
+import { knex } from './utils/knex';
 
 export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery) => {
 
@@ -15,9 +17,9 @@ export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery)
     {
       "type" : "article",
       "id" : "0",
-      "title": translation.modified,
+      "title": 'translation',
       "input_message_content" : {
-        message_text: translation.modified
+        message_text: translation
       }
     }
   ];	
@@ -26,6 +28,8 @@ export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery)
 };
 
 export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
+  logger.debug('receive a message', msg);
+
   if (msg.text === undefined) {
     return;
   }
@@ -50,17 +54,21 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
         break;
 
       case MessageType.Word:
-        const translationResult = await findTranslation(msg.text);
-        bot.sendMessage(msg.chat.id, translationResult.response, {});
+        const translation = await findTranslation(msg.text);
+        reply = translation || config.get<string>('messages.unknownWord');
+        await bot.sendMessage(msg.chat.id, reply, {});
         break;
     }
 
   } catch (err) {
+    logger.error(err);
     reply = config.get<string>('message.internalError');
     bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
   }
 };
 
-export const errorHandler = () => {
+export function errorHandler(err: any) {
+  logger.error(err);
+  knex.destroy();
   process.exit(1);
 }

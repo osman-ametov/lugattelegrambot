@@ -15,12 +15,20 @@
   "dependencies": {
     "config": "^3.2.2",
     "cron": "^1.7.2",
-    "node-telegram-bot-api": "^0.30.0"
+    "knex": "^0.19.4",
+    "mysql": "^2.17.1",
+    "node-telegram-bot-api": "^0.30.0",
+    "pino": "^5.13.4",
+    "pino-pretty": "^3.2.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7"
   },
   "devDependencies": {
     "@types/config": "0.0.34",
     "@types/cron": "^1.7.1",
+    "@types/knex": "^0.16.1",
     "@types/node-telegram-bot-api": "^0.31.0",
+    "@types/pino": "^5.8.10",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"
   }

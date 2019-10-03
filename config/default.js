@@ -1,4 +1,7 @@
 module.exports = {
+  name: 'Lugat Telegram Bot',
+  logLevel: process.env.LOG_LEVEL || 'debug',
+
   telegram: {
     token: process.env.TELEGRAM_TOKEN || '850030005:AAGhJMAdpOqphAFvTGSnGrH5o2qYPL24cxU',
     username: process.env.TELEGRAM_USERNAME || 'qitlugat2bot',
@@ -11,7 +14,7 @@ module.exports = {
   },
 
   namaz: {
-    cron: process.env.NAMAZ_CRON || '0 0 * * * *'
+    cron: process.env.NAMAZ_CRON || '* * * * * *'
   },
 
   message: {
@@ -21,10 +24,10 @@ module.exports = {
   },
 
   database: {
-    host: process.env.DB_HOST || 'localhsot',
+    host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,
-    host: process.env.DB_NAME || 'lugat',
-    host: process.env.DB_USER || 'root',
-    host: process.env.DB_PASS || 'root',
+    database: process.env.DB_NAME || 'lugat',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASS || 'root',
   },
 };
