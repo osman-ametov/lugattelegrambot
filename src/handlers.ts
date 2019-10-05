@@ -40,22 +40,22 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
     const messageType = getMessageType(msg);    
     switch (messageType) {
       case MessageType.Start:
-        bot.sendSticker(msg.chat.id, config.get<string>('telegram.sticker.hello'));
+        await bot.sendSticker(msg.chat.id, config.get<string>('telegram.sticker.hello'));
         break;
 
       case MessageType.Namaz:
         reply = config.get<string>('message.notTranslator');
-        bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
+        await bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
         break;
 
       case MessageType.Sentence:
         reply = config.get<string>('message.notTranslator');
-        bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
+        await bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
         break;
 
       case MessageType.Word:
         const translation = await findTranslation(msg.text);
-        reply = translation || config.get<string>('messages.unknownWord');
+        reply = translation || config.get<string>('message.unknownWord');
         await bot.sendMessage(msg.chat.id, reply, {});
         break;
     }
@@ -63,7 +63,7 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
   } catch (err) {
     logger.error(err);
     reply = config.get<string>('message.internalError');
-    bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
+    await bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
   }
 };
 

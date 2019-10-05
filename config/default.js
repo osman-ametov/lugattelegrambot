@@ -14,7 +14,7 @@ module.exports = {
   },
 
   namaz: {
-    cron: process.env.NAMAZ_CRON || '* * * * * *'
+    cron: process.env.NAMAZ_CRON || '0 0 * * * *'
   },
 
   message: {

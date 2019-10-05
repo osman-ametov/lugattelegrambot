@@ -2,20 +2,19 @@ import { knex } from './utils/knex';
 import { preventInjection } from './utils/sql';
 import { ITranslation } from './types';
 
-export async function findRussianWord(word: string): Promise<ITranslation | undefined> {
+async function findWord(table: string, word: string): Promise<ITranslation | undefined> {
   const result = await knex.select('*')
-    .from('ru_chr')
-    .where(knex.raw(`word LIKE '%${preventInjection(word)}'`))
+    .from(table)
+    .where('word', preventInjection(word))
     .limit(1);
 
   return result.length ? result[0] : undefined;
 }
 
-export async function findCrimeanWord(word: string): Promise<ITranslation | undefined> {
-  const result = await knex.select('*')
-    .from('chr_ru')
-    .where(knex.raw(`word LIKE '%${preventInjection(word)}'`))
-    .limit(1);
+export async function findRussianWord(word: string): Promise<ITranslation | undefined> {
+  return findWord('ru_chr', word);
+}
 
-  return result.length ? result[0] : undefined;
+export async function findCrimeanWord(word: string): Promise<ITranslation | undefined> {
+  return findWord('chr_ru', word);
 }

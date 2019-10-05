@@ -18,4 +18,4 @@ process.on('uncaughtException', errorHandler);
 process.on('unhandledRejection', errorHandler);
 
 const cronTime = config.get<string>('namaz.cron');
-new CronJob(cronTime, parseNamazTime);
+new CronJob(cronTime, parseNamazTime, undefined, true);
