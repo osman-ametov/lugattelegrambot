@@ -1,4 +1,3 @@
-import { Message } from 'node-telegram-bot-api';
 import { MessageType } from './types';
 import { logger } from './utils/logger';
 import { transliterate } from './utils/transliterate';
@@ -11,6 +10,7 @@ import {
   insertNamazTimes, 
   isCrawledToday 
 } from './repositories';
+import { InlineQueryResultArticle } from 'node-telegram-bot-api';
 
 export async function findTranslation(word: string): Promise<string | undefined> {
   const russianWord = await findRussianWord(word);
@@ -31,9 +31,17 @@ export async function findTranslation(word: string): Promise<string | undefined>
   return undefined;
 };
 
-export function getMessageType (msg: Message): MessageType {
-  if (msg.text === '#namaz') {
+export function getMessageType (msg: string): MessageType {
+  if (msg === '#namaz') {
     return MessageType.Namaz;
+  }
+
+  if (msg === '/start') {
+    return MessageType.Start;
+  }
+
+  if (msg.split(' ').length > 2) {
+    return MessageType.Sentence;
   }
 
   return MessageType.Word;
@@ -69,4 +77,17 @@ export async function parseNamazTime() {
   } catch (err) {
     logger.error('Crawling error', err);
   }
+}
+
+export function toInlineQueryAnswer(msg: string): InlineQueryResultArticle[] {
+  return [
+    {
+      'type' : 'article',
+      'id' : '0',
+      'title': msg,
+      'input_message_content' : {
+        message_text: msg
+      }
+    }
+  ];
 }
