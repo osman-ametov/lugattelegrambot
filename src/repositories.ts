@@ -42,3 +42,12 @@ export async function isCrawledToday(cityId: number): Promise<boolean> {
 
   return rows.length > 0;
 }
+
+export async function insertUserQuery(query: string, word: string, found: boolean) {
+  return knex('user_queries').insert([{
+    date: knex.raw('NOW()'),
+    query,
+    word,
+    found,
+  }]);
+}

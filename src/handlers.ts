@@ -5,14 +5,17 @@ import { findTranslation, getMessageType, toInlineQueryAnswer } from './services
 import { MessageType } from './types';
 import { logger } from './utils/logger';
 import { knex } from './utils/knex';
+import { insertUserQuery } from './repositories';
 
 export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery) => {
+  logger.debug('receive an inline message', msg);
 
   if (msg.query === undefined) {
     return;
   }
 
-  let reply: string;
+  let reply: string | undefined = undefined;
+  let found = false;
 
   try {
     const messageType = getMessageType(msg.query);
@@ -30,8 +33,13 @@ export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery)
       case MessageType.Word:
         const translation = await findTranslation(msg.query);
         reply = translation || config.get<string>('message.unknownWord');
+        found = translation !== undefined;
         await bot.answerInlineQuery(msg.id, toInlineQueryAnswer(reply));
         break;
+    }
+
+    if (reply !== undefined) {
+      await insertUserQuery(msg.query, reply, found);
     }
 
   } catch (err) {
@@ -48,7 +56,8 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
     return;
   }
 
-  let reply: string;
+  let reply: string | undefined = undefined;
+  let found = false;
 
   try {
     const messageType = getMessageType(msg.text);    
@@ -70,8 +79,13 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
       case MessageType.Word:
         const translation = await findTranslation(msg.text);
         reply = translation || config.get<string>('message.unknownWord');
+        found = translation !== undefined;
         await bot.sendMessage(msg.chat.id, reply, {});
         break;
+    }
+
+    if (reply !== undefined) {
+      await insertUserQuery(msg.text, reply, found);
     }
 
   } catch (err) {
