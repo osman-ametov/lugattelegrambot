@@ -18,3 +18,27 @@ export async function findRussianWord(word: string): Promise<ITranslation | unde
 export async function findCrimeanWord(word: string): Promise<ITranslation | undefined> {
   return findWord('chr_ru', word);
 }
+
+export async function insertNamazTimes(cityId: number, times: string[]) {
+  return knex('namaztime').insert([{
+    date: knex.raw('NOW()'),
+    city_id: cityId,
+    n1: times[0],
+    n2: times[1],
+    n3: times[2],
+    n4: times[3],
+    n5: times[4],
+    n6: times[5],
+  }]);
+}
+
+export async function isCrawledToday(cityId: number): Promise<boolean> {
+  const rows = await knex('namaztime')
+    .select(['id'])
+    .where('city_id', cityId)
+    .where(knex.raw('DATE(date) = DATE(NOW())'))
+    .orderBy('id', 'desc')
+    .limit(1);
+
+  return rows.length > 0;
+}

@@ -14,7 +14,9 @@ module.exports = {
   },
 
   namaz: {
-    cron: process.env.NAMAZ_CRON || '0 0 * * * *'
+    cron: process.env.NAMAZ_CRON || '0 0 * * * *',
+    cityId: 1, // Simferopol
+    url: 'http://qmdi.org/index.php/ru'
   },
 
   message: {
