@@ -20,11 +20,6 @@ export const inlineQueryHandler = (bot: TelegramBot) => async (msg: InlineQuery)
   try {
     const messageType = getMessageType(msg.query);
     switch (messageType) {
-      case MessageType.Namaz:
-        reply = config.get<string>('message.notTranslator');
-        await bot.answerInlineQuery(msg.id, toInlineQueryAnswer(reply));
-        break;
-
       case MessageType.Sentence:
         reply = config.get<string>('message.notTranslator');
         await bot.answerInlineQuery(msg.id, toInlineQueryAnswer(reply));
@@ -64,11 +59,6 @@ export const messageHandler = (bot: TelegramBot) => async (msg: Message) => {
     switch (messageType) {
       case MessageType.Start:
         await bot.sendSticker(msg.chat.id, config.get<string>('telegram.sticker.hello'));
-        break;
-
-      case MessageType.Namaz:
-        reply = config.get<string>('message.notTranslator');
-        await bot.sendMessage(msg.chat.id, reply, { parse_mode: 'HTML' });
         break;
 
       case MessageType.Sentence:

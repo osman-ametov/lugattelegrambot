@@ -1,8 +1,6 @@
 import config from 'config';
 import TelegramBot from 'node-telegram-bot-api';
 import { inlineQueryHandler, messageHandler, errorHandler } from './handlers';
-import { CronJob } from 'cron';
-import { parseNamazTime } from './services';
 import { logger } from './utils/logger';
 
 logger.info('Start bot', config);
@@ -16,6 +14,3 @@ bot.on('polling_error', (err) => logger.error(err));
 
 process.on('uncaughtException', errorHandler);
 process.on('unhandledRejection', errorHandler);
-
-const cronTime = config.get<string>('namaz.cron');
-new CronJob(cronTime, parseNamazTime, undefined, true);

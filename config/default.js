@@ -13,12 +13,6 @@ module.exports = {
     }
   },
 
-  namaz: {
-    cron: process.env.NAMAZ_CRON || '0 0 * * * *',
-    cityId: 1, // Simferopol
-    url: 'http://qmdi.org/index.php/ru'
-  },
-
   message: {
     notTranslator: process.env.MSG_NOT_A_TRANSLATOR || 'Я словарь, а не переводчик',
     unknownWord: process.env.MSG_UNKNOWN_WORD || 'Не знаю это слово :(',
