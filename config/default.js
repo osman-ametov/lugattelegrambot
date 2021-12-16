@@ -1,10 +1,12 @@
+require('dotenv').config()
+
 module.exports = {
   name: 'Lugat Telegram Bot',
   logLevel: process.env.LOG_LEVEL || 'debug',
 
   telegram: {
-    token: process.env.TELEGRAM_TOKEN || '850030005:AAGhJMAdpOqphAFvTGSnGrH5o2qYPL24cxU',
-    username: process.env.TELEGRAM_USERNAME || 'qitlugat2bot',
+    token: process.env.TELEGRAM_TOKEN,
+    username: process.env.TELEGRAM_USERNAME,
     options: {
       polling: true
     },
@@ -14,16 +16,16 @@ module.exports = {
   },
 
   message: {
-    notTranslator: process.env.MSG_NOT_A_TRANSLATOR || 'Я словарь, а не переводчик',
-    unknownWord: process.env.MSG_UNKNOWN_WORD || 'Не знаю это слово :(',
-    internalError: process.env.MSG_INTERNAL_ERROR || 'Кажется что-то пошло не так',
+    notTranslator: process.env.MSG_NOT_A_TRANSLATOR,
+    unknownWord: process.env.MSG_UNKNOWN_WORD,
+    internalError: process.env.MSG_INTERNAL_ERROR,
   },
 
   database: {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    database: process.env.DB_NAME || 'lugat',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || 'root',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
   },
 };
